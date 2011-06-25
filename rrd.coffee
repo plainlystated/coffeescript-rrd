@@ -3,8 +3,6 @@ exec = require('child_process').exec
 spawn = require('child_process').spawn
 fs = require('fs')
 
-binaryRRDFile = require('./binaryFile.js')
-RRDReader = require('./rrdFile.js').RRDFile
 RRDRecord = require('./rrdRecord').RRDRecord
 
 class RRD
@@ -53,22 +51,6 @@ class RRD
     cmd = "rrdtool graph #{graphFilename} #{(this._rrdGraphLine(line) for line in lines).join(" ")} --start #{options.start}"
     console.log cmd
     exec cmd, cb
-
-  _datasourceInfo = (rrdReader, dsNum) ->
-    datasource = rrdReader.getDS(dsNum)
-
-    values = []
-    rra = rrdReader.getRRA(dsNum)
-    for rowNum in [0..rra.row_cnt-1]
-      do (rowNum) ->
-        values.push(rra.getElFast(rowNum, dsNum))
-
-    result = {}
-    result[datasource.getName()] = values
-    return result
-
-  _rrdGraphLine: (line) =>
-    return "DEF:#{line.name}=#{@filename}:#{line.name}:AVERAGE LINE2:#{line.name}#{line.color}"
 
   _rrdTime = (date) ->
     return Math.round(date.valueOf() / 1000)
