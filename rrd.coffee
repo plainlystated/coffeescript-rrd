@@ -31,9 +31,6 @@ class RRD
 
   fetch: (start, end, cb) ->
     this.rrdExec "fetch", "AVERAGE --start #{start} --end #{end}", (err, data) ->
-      if err
-        return cb(err.message, null)
-
       lines = data.split("\n")
       fieldNames = lines.shift().replace(new RegExp("^ +"), "").split(new RegExp(" +"))
       lines.shift()
@@ -48,7 +45,7 @@ class RRD
           record[fieldNames[i]] = fields[i]
         record
 
-      cb(undefined, records)
+      cb(records)
 
   graph: (graphFilename, lines, options, cb) ->
     cmd = "rrdtool graph #{graphFilename} #{(this._rrdGraphLine(line) for line in lines).join(" ")} --start #{options.start}"
