@@ -28,12 +28,26 @@ class RRD
     fs.unlink(@filename, cb)
 
   dump: (cb) ->
-    this.rrdExec("dump", "", cb)
+    proc = @rrdSpawn("dump", [])
+    err = ""
+    xml = ""
+    proc.stderr.on 'data', (data) ->
+      err += data
+    proc.stdout.on 'data', (data) ->
+      xml += data
+    proc.on 'exit', (code) ->
+      if code == 0
+        cb null, xml
+      else
+        cb err, null
 
   rrdExec: (command, cmd_args, cb) ->
     cmd = "rrdtool #{command} #{@filename} #{cmd_args}"
     console.log cmd
     exec(cmd, {maxBuffer: 500 * 1024}, cb)
+
+  rrdSpawn: (command, args) ->
+    spawn("rrdtool", [command, @filename].concat(args))
 
   update: (time, values, cb) ->
     this.rrdExec("update", "#{_rrdTime(time)}:#{values.join(':')}", cb)
