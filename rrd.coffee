@@ -74,11 +74,6 @@ class RRD
 
       cb(undefined, records)
 
-  graph: (graphFilename, lines, options, cb) ->
-    cmd = "rrdtool graph #{graphFilename} #{(this._rrdGraphLine(line) for line in lines).join(" ")} --start #{options.start}"
-    console.log cmd
-    exec(cmd, {maxBuffer: 500 * 1024}, cb)
-
   _rrdTime = (date) ->
     return Math.round(date.valueOf() / 1000)
 
