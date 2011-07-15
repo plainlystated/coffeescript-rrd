@@ -1,6 +1,7 @@
 vows = require('vows')
 assert = require('assert')
 RRD = require('../rrd').RRD
+exec = require('child_process').exec
 
 vows.describe('RRD').addBatch(
   'created a database with invalid contents':
@@ -98,5 +99,26 @@ vows.describe('RRD').addBatch(
       # Need to figure out how to test this without messing up subsequent test runs
       # 'returns no error': (err) ->
       #   assert.equal(err, undefined)
+  'when restoring':
+    'a valid file':
+      topic: () ->
+        RRD.restore('valid.xml', "tmp-restore.rrd", @callback)
+        return
+
+      'returns no error': (err) ->
+        assert.equal(err, null)
+
+    'an invalid file':
+      topic: () ->
+        RRD.restore('invalid.xml', "tmp-restore.rrd", @callback)
+        return
+
+      # The underlying process never returns an error here..  need to figure out a better way to handle this
+      # 'returns an error': (err) ->
+      #   assert.equal(err, 'some error')
+
+).addBatch(
+  'cleanup': () ->
+    exec('rm tmp-*')
 ).export(module, {error: false})
 
