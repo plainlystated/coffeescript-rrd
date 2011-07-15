@@ -10,10 +10,19 @@ class RRD
 
   create: (rrdArgs, options, cb) ->
     start = options.start ? new Date
-    console.log start
-    cmd = "rrdtool create #{@filename} --start #{_rrdTime(start)} --step 300 #{rrdArgs.join(" ")}"
-    console.log " - #{cmd}"
-    exec(cmd, cb)
+    cmdArgs = ["create", @filename, "--start", _rrdTime(start), "--step", 300].concat rrdArgs
+
+    console.log " - rrdtool #{cmdArgs.join(" ")}"
+
+    proc = spawn("rrdtool", cmdArgs)
+    err = ""
+    proc.stderr.on 'data', (data) ->
+      err += data
+    proc.on 'exit', (code) ->
+      if code == 0
+        cb undefined, 'ok'
+      else
+        cb err, undefined
 
   destroy: (cb) ->
     fs.unlink(@filename, cb)
