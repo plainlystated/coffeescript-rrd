@@ -1,7 +1,6 @@
 vows = require('vows')
 assert = require('assert')
 RRD = require('../rrd').RRD
-fs = require('fs')
 
 vows.describe('RRD').addBatch(
   'created a database with invalid contents':
@@ -49,6 +48,14 @@ vows.describe('RRD').addBatch(
       'returns no xml': (err, xml) ->
         assert.equal(xml, undefined)
 
+    'when updating':
+      topic: (rrd) ->
+        rrd.update(new Date, [1,2,3], @callback)
+        return
+
+      'returns an error': (err) ->
+        assert.equal(err, "ERROR: opening 'invalid.rrd': No such file or directory\n")
+
   'a valid RRD':
     topic: new RRD('valid.rrd')
 
@@ -83,5 +90,13 @@ vows.describe('RRD').addBatch(
         assert.match(xml, /^<\?xml version="1.0" encoding="utf-8"\?>/)
         assert.match(xml, /<\/rrd>/)
 
-).export(module)
+    'when updating':
+      topic: (rrd) ->
+        rrd.update(new Date, [1,2,3], @callback)
+        return
+
+      # Need to figure out how to test this without messing up subsequent test runs
+      # 'returns no error': (err) ->
+      #   assert.equal(err, undefined)
+).export(module, {error: false})
 

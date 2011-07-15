@@ -28,29 +28,29 @@ class RRD
     fs.unlink(@filename, cb)
 
   dump: (cb) ->
-    proc = @rrdSpawn("dump", [])
-    err = ""
-    xml = ""
-    proc.stderr.on 'data', (data) ->
-      err += data
-    proc.stdout.on 'data', (data) ->
-      xml += data
-    proc.on 'exit', (code) ->
-      if code == 0
-        cb null, xml
-      else
-        cb err, null
+    @rrdSpawn("dump", [], cb)
 
   rrdExec: (command, cmd_args, cb) ->
     cmd = "rrdtool #{command} #{@filename} #{cmd_args}"
     console.log cmd
     exec(cmd, {maxBuffer: 500 * 1024}, cb)
 
-  rrdSpawn: (command, args) ->
-    spawn("rrdtool", [command, @filename].concat(args))
+  rrdSpawn: (command, args, cb) ->
+    proc = spawn("rrdtool", [command, @filename].concat(args))
+    err = ""
+    out = ""
+    proc.stderr.on 'data', (data) ->
+      err += data
+    proc.stdout.on 'data', (data) ->
+      out += data
+    proc.on 'exit', (code) ->
+      if code == 0
+        cb null, out
+      else
+        cb err, null
 
   update: (time, values, cb) ->
-    this.rrdExec("update", "#{_rrdTime(time)}:#{values.join(':')}", cb)
+    @rrdSpawn("update", ["#{_rrdTime(time)}:#{values.join(':')}"], cb)
 
   fetch: (start, end, cb) ->
     this.rrdExec "fetch", "AVERAGE --start #{start} --end #{end}", (err, data) ->
