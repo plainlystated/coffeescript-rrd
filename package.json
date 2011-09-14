@@ -4,7 +4,7 @@
   , "keywords": ["rrd", "round robin", "database"]
   , "author": "Patrick Schless <npm@bitesback.com> (http://www.plainlystated.com)"
   , "version": "1.0.1"
-  , "main": "./rrd.coffee"
+  , "main": "./rrd.js"
   , "files": ["rrd.js", "rrd.coffee", "rrdRecord.js", "rrdRecord.coffee", "test"]
   , "repository" : {
       "type" : "git"
