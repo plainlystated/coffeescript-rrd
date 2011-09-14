@@ -3,12 +3,9 @@
   , "description": "A library for querying and manipulating a Round Robin Database"
   , "keywords": ["rrd", "round robin", "database"]
   , "author": "Patrick Schless <npm@bitesback.com> (http://www.plainlystated.com)"
-  , "version": "1.0.0"
+  , "version": "1.0.1"
   , "main": "./rrd.coffee"
-  , "files": ["rrd.coffee", "rrdRecord.coffee", "test"]
-  , "dependencies": {
-    "coffee-script": ">= 1.1.1"
-  }
+  , "files": ["rrd.js", "rrd.coffee", "rrdRecord.js", "rrdRecord.coffee", "test"]
   , "repository" : {
       "type" : "git"
     , "url" : "https://github.com/plainlystated/coffeescript-rrd"
