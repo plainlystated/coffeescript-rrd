@@ -12,4 +12,4 @@ test: $(JS_FILES)
 	coffee --compile $^
 
 clean:
-	rm -rf $(JS_FILES)
+	rm -rf $(JS_FILES) create-test.rrd
