@@ -1,6 +1,8 @@
 COFFEE_FILES:=$(shell find . -name \*.coffee -type f)
 JS_FILES:=$(subst coffee,js,$(COFFEE_FILES))
 
+.PHONY: all test clean
+
 all: $(JS_FILES)
 
 test: $(JS_FILES)
@@ -10,4 +12,4 @@ test: $(JS_FILES)
 	coffee --compile $^
 
 clean:
-	rm $(JS_FILES)
+	rm -rf $(JS_FILES)
