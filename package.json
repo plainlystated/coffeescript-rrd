@@ -6,6 +6,9 @@
   , "version": "1.0.1"
   , "main": "./rrd.js"
   , "files": ["rrd.js", "rrd.coffee", "rrdRecord.js", "rrdRecord.coffee", "test"]
+  , "scripts": {
+    "prepublish": "make"
+  }
   , "repository" : {
       "type" : "git"
     , "url" : "https://github.com/plainlystated/coffeescript-rrd"
