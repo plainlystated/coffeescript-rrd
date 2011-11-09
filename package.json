@@ -10,4 +10,8 @@
       "type" : "git"
     , "url" : "https://github.com/plainlystated/coffeescript-rrd"
   }
+  , "devDependencies" : {
+      "coffee-script": "~> 1.1.2"
+    , "vows":          "~> 0.5.3"
+  }
 }
