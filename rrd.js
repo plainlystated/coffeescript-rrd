@@ -1,15 +1,25 @@
 (function() {
-  var RRD, RRDRecord, exec, fs, spawn, sys;
+  var RRD, RRDInfo, RRDRecord, exec, fs, spawn, sys;
+
   sys = require('sys');
+
   exec = require('child_process').exec;
+
   spawn = require('child_process').spawn;
+
   fs = require('fs');
+
   RRDRecord = require('./rrdRecord').RRDRecord;
+
+  RRDInfo = require('./rrdInfo').RRDInfo;
+
   RRD = (function() {
     var _rrdTime;
+
     function RRD(filename) {
       this.filename = filename;
     }
+
     RRD.prototype.create = function(rrdArgs, options, cb) {
       var cmdArgs, err, proc, start, _ref;
       start = (_ref = options.start) != null ? _ref : new Date;
@@ -28,12 +38,15 @@
         }
       });
     };
+
     RRD.prototype.destroy = function(cb) {
       return fs.unlink(this.filename, cb);
     };
+
     RRD.prototype.dump = function(cb) {
       return this.rrdSpawn("dump", [], cb);
     };
+
     RRD.prototype.rrdExec = function(command, cmd_args, cb) {
       var cmd;
       cmd = "rrdtool " + command + " " + this.filename + " " + cmd_args;
@@ -42,6 +55,7 @@
         maxBuffer: 500 * 1024
       }, cb);
     };
+
     RRD.prototype.rrdSpawn = function(command, args, cb) {
       var err, out, proc;
       proc = spawn("rrdtool", [command, this.filename].concat(args));
@@ -61,9 +75,11 @@
         }
       });
     };
+
     RRD.prototype.update = function(time, values, cb) {
       return this.rrdSpawn("update", ["" + (_rrdTime(time)) + ":" + (values.join(':'))], cb);
     };
+
     RRD.prototype.fetch = function(start, end, cb) {
       return this.rrdExec("fetch", "AVERAGE --start " + start + " --end " + end, function(err, data) {
         var fieldNames, fields, i, line, lines, record, records;
@@ -79,12 +95,8 @@
           _results = [];
           for (_i = 0, _len = lines.length; _i < _len; _i++) {
             line = lines[_i];
-            if (line === "") {
-              continue;
-            }
-            if (line.match(" nan ")) {
-              continue;
-            }
+            if (line === "") continue;
+            if (line.match(" nan ")) continue;
             fields = line.split(new RegExp("[: ]+"));
             record = new RRDRecord(fields.shift(), fieldNames);
             for (i = 0, _ref = fields.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
@@ -97,13 +109,25 @@
         return cb(void 0, records);
       });
     };
+
+    RRD.prototype.info = function(cb) {
+      return this.rrdSpawn("info", [], function(err, results) {
+        return cb(null, new RRDInfo(results));
+      });
+    };
+
     _rrdTime = function(date) {
       return Math.round(date.valueOf() / 1000);
     };
+
     return RRD;
+
   })();
+
   RRD.restore = function(filenameXML, filenameRRD, cb) {
     return exec("rrdtool restore " + filenameXML + " " + filenameRRD, cb);
   };
+
   exports.RRD = RRD;
+
 }).call(this);

@@ -4,6 +4,7 @@ spawn = require('child_process').spawn
 fs = require('fs')
 
 RRDRecord = require('./rrdRecord').RRDRecord
+RRDInfo   = require('./rrdInfo').RRDInfo
 
 class RRD
   constructor: (@filename) ->
@@ -74,6 +75,10 @@ class RRD
 
       cb(undefined, records)
 
+  info: (cb) ->
+    @rrdSpawn "info", [], (err, results) ->
+      return cb(null, new RRDInfo(results))
+  
   _rrdTime = (date) ->
     return Math.round(date.valueOf() / 1000)
 
