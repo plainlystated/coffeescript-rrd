@@ -58,7 +58,7 @@ vows.describe('RRD').addBatch(
         assert.equal(err, "ERROR: opening 'invalid.rrd': No such file or directory\n")
 
   'a valid RRD':
-    topic: new RRD('valid.rrd')
+    topic: new RRD('test/valid.rrd')
 
     'when fetching':
       topic: (rrd) ->
@@ -102,7 +102,7 @@ vows.describe('RRD').addBatch(
   'when restoring':
     'a valid file':
       topic: () ->
-        RRD.restore('valid.xml', "tmp-restore.rrd", @callback)
+        RRD.restore('test/valid.xml', "tmp-restore.rrd", @callback)
         return
 
       'returns no error': (err) ->
@@ -110,7 +110,7 @@ vows.describe('RRD').addBatch(
 
     'an invalid file':
       topic: () ->
-        RRD.restore('invalid.xml', "tmp-restore.rrd", @callback)
+        RRD.restore('test/invalid.xml', "tmp-restore.rrd", @callback)
         return
 
       # The underlying process never returns an error here..  need to figure out a better way to handle this

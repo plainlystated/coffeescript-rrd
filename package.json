@@ -10,4 +10,12 @@
       "type" : "git"
     , "url" : "https://github.com/plainlystated/coffeescript-rrd"
   }
+  , "devDepencencies" :{
+      "coffee-script": ">=1.3.3",
+      "vows": ">=0.6.3"
+  }
+  , "scripts": {
+    "test": "LANG=EN_us ./node_modules/.bin/vows test/rrd-test.coffee"
+    , "install": "./node_modules/.bin/coffee -c -b *.coffee"
+  }
 }
