@@ -1,6 +1,7 @@
 vows = require('vows')
 assert = require('assert')
 RRD = require('../rrd').RRD
+RRDInfo = require('../rrdInfo').RRDInfo
 exec = require('child_process').exec
 
 vows.describe('RRD').addBatch(
@@ -99,6 +100,17 @@ vows.describe('RRD').addBatch(
       # Need to figure out how to test this without messing up subsequent test runs
       # 'returns no error': (err) ->
       #   assert.equal(err, undefined)
+    'when infoing':
+      topic: (rrd) ->
+        rrd.info(@callback)
+        return
+
+      'returns no error': (err, data) ->
+        assert.equal(err, null)
+
+      'returns an RRDInfo object': (err, data) ->
+        assert.instanceOf(data, RRDInfo)      
+
   'when restoring':
     'a valid file':
       topic: () ->
