@@ -1,4 +1,3 @@
-sys = require('sys')
 exec = require('child_process').exec
 spawn = require('child_process').spawn
 fs = require('fs')
