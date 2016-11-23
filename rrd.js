@@ -1,6 +1,6 @@
 (function() {
   var RRD, RRDRecord, exec, fs, spawn, sys;
-  sys = require('sys');
+  util = require('util');
   exec = require('child_process').exec;
   spawn = require('child_process').spawn;
   fs = require('fs');
